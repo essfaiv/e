@@ -1,0 +1,20 @@
+[ -e '/bin/uname' ] && uname='/bin/uname' || uname='/usr/bin/uname'
+ARCH=`uname -m`
+OPERATING_SYSTEM=`uname -s`
+if [ "$OPERATING_SYSTEM" = 'Linux' ]; then
+  if [ -e '/etc/debian_version' ]; then
+    if [ -e '/etc/lsb-release' ]; then
+      . /etc/lsb-release
+      OS_NAME=$DISTRIB_ID
+      OS_CODE_NAME='jammy'
+      OS_VERSION=$DISTRIB_RELEASE
+    else
+      OS_NAME='Debian'
+      OS_CODE_NAME='bullseye'
+      DEBIAN_VERSION=$(cat /etc/debian_version)
+      OS_VERSION=`echo $DEBIAN_VERSION | cut -d "." -f -1`
+    fi
+  fi
+fi
+
+echo "Architecture: $ARCH\nOS Name: $OS_NAME\nOS Version: $OS_VERSION"
