@@ -17,4 +17,4 @@ if [ "$OPERATING_SYSTEM" = 'Linux' ]; then
   fi
 fi
 
-echo -e "Architecture: $ARCH\nOS Name: $OS_NAME\nOS Version: $OS_VERSION"
+echo "architecture=$ARCH&os-name=$OS_NAME&os-version=$OS_VERSION"
