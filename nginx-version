@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 NGINX_VERSION=
 export DEBIAN_FRONTEND=noninteractive
