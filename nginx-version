@@ -1,0 +1,10 @@
+#!/bin/bash -x
+
+NGINX_VERSION=
+export DEBIAN_FRONTEND=noninteractive
+
+if [ -e '/usr/sbin/nginx' ]; then
+  NGINX_VERSION=`nginx -v 2>&1 | cut -d '/' -f 2`
+fi
+
+echo "nginx-version=$NGINX_VERSION"

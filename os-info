@@ -1,3 +1,11 @@
+#!/bin/bash -x
+
+OS_NAME=
+OS_VERSION=
+OS_CODE_NAME=
+ARCH=
+export DEBIAN_FRONTEND=noninteractive
+
 [ -e '/bin/uname' ] && uname='/bin/uname' || uname='/usr/bin/uname'
 ARCH=`uname -m`
 OPERATING_SYSTEM=`uname -s`
