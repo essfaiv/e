@@ -1,11 +1,9 @@
 #!/bin/bash
 
 OS_DESCRIPTION=
-ARCH=
 export DEBIAN_FRONTEND=noninteractive
 
 [ -e '/bin/uname' ] && uname='/bin/uname' || uname='/usr/bin/uname'
-ARCH=`uname -m`
 OPERATING_SYSTEM=`uname -s`
 if [ "$OPERATING_SYSTEM" = 'Linux' ]; then
   if [ -e '/etc/debian_version' ]; then
