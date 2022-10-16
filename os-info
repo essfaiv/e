@@ -3,6 +3,7 @@
 OS_NAME=
 OS_VERSION=
 OS_CODE_NAME=
+OS_DESCRIPTION=
 ARCH=
 export DEBIAN_FRONTEND=noninteractive
 
@@ -14,15 +15,11 @@ if [ "$OPERATING_SYSTEM" = 'Linux' ]; then
     if [ -e '/etc/lsb-release' ]; then
       . /etc/lsb-release
       OS_NAME=$DISTRIB_ID
-      OS_CODE_NAME='jammy'
+      OS_CODE_NAME=$DISTRIB_CODENAME
       OS_VERSION=$DISTRIB_RELEASE
-    else
-      OS_NAME='Debian'
-      OS_CODE_NAME='bullseye'
-      DEBIAN_VERSION=$(cat /etc/debian_version)
-      OS_VERSION=`echo $DEBIAN_VERSION | cut -d "." -f -1`
+      OS_DESCRIPTION=$DISTRIB_DESCRIPTION
     fi
   fi
 fi
 
-echo "architecture=$ARCH&os-name=$OS_NAME&os-version=$OS_VERSION"
+echo "architecture=$ARCH&os-name=$OS_NAME&os-version=$OS_VERSION&os-description=$OS_DESCRIPTION"
