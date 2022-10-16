@@ -1,0 +1,26 @@
+#!/bin/bash
+
+STR=()
+
+export DEBIAN_FRONTEND=noninteractive
+
+sites=`grep server_name /etc/nginx/sites-enabled/* -RiI`
+sites=`echo $sites | sed 's/[\n\t]//g' | sed 's/;/;\n/g'`
+readarray -t sites <<< "$sites"
+
+for site in "${sites[@]}"; do
+  site=`echo $site | cut -d ':' -f 2`
+  site=`echo $site | sed 's/^\s//'`
+  if [ '#' != ${site:0:1} ]; then
+    site=`echo $site | sed 's/server_name\s*//' | sed 's/;//' | cut -d ' ' -f 1`
+    if [ '_' != ${site:0:1} ]; then
+      STR+=("sites[]=$site")
+    fi
+  fi
+done
+
+if [ 0 != ${#STR[@]} ]; then
+  STR=${STR[@]}
+  echo ${STR// /&}
+fi
+
