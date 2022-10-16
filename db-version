@@ -1,0 +1,18 @@
+#!/bin/bash
+
+DB=
+export DEBIAN_FRONTEND=noninteractive
+
+mysql='/usr/bin/mysql'
+STR=`mysql --version`
+if [[ $STR == *'MariaDB'* ]]; then
+  VERSION=`echo $STR | cut -d ' ' -f 5`
+  DB="MariaDB"
+else
+  VERSION=`echo $STR | cut -d ' ' -f 3`
+  DB="MySQL"
+fi
+VERSION=`echo $VERSION | cut -d '-' -f -1 | cut -d '.' -f -2`
+DB="$DB $VERSION"
+
+echo "db=$DB"
