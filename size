@@ -7,6 +7,6 @@ MEM=`echo $(($(getconf _PHYS_PAGES) * $(getconf PAGE_SIZE) / (1024 * 1024)))`
 MEM=`echo $((($MEM / 1000) + ($MEM % 1000 > 0)))`
 
 # vCPU.
-VCPU=`cat /proc/cpuinfo | grep processor | wc -l`
+CPU=`cat /proc/cpuinfo | grep processor | wc -l`
 
-echo "mem=$MEM&vcpu=$VCPU"
+echo "mem=$MEM&cpu=$CPU"
