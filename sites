@@ -23,4 +23,3 @@ if [ 0 != ${#STR[@]} ]; then
   STR=${STR[@]}
   echo ${STR// /&}
 fi
-
