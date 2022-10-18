@@ -14,12 +14,12 @@ for site in "${sites[@]}"; do
   if [ '#' != ${site:0:1} ]; then
     site=`echo $site | sed 's/server_name\s*//' | sed 's/;//' | cut -d ' ' -f 1`
     if [ '_' != ${site:0:1} ]; then
-      STR+=("sites[]=$site")
+      STR+=($site)
     fi
   fi
 done
 
 if [ 0 != ${#STR[@]} ]; then
   STR=${STR[@]}
-  echo ${STR// /&}
+  echo ${STR// /,}
 fi
