@@ -15,4 +15,4 @@ fi
 VERSION=`echo $VERSION | cut -d '-' -f -1 | cut -d '.' -f -2`
 DB="$DB $VERSION"
 
-echo "db=$DB"
+echo $DB
