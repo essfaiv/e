@@ -9,4 +9,4 @@ MEM=`echo $((($MEM / 1000) + ($MEM % 1000 > 0)))`
 # vCPU.
 CPU=`cat /proc/cpuinfo | grep processor | wc -l`
 
-echo "mem=$MEM&cpu=$CPU"
+echo "$MEM,$CPU"
