@@ -1,0 +1,23 @@
+
+server {
+
+
+    server_name vintevintedois.jflalarmes.com.br www.vintevintedois.jflalarmes.com.br;
+
+
+    access_log /var/log/nginx/vintevintedois.jflalarmes.com.br.access.log rt_cache;
+    error_log /var/log/nginx/vintevintedois.jflalarmes.com.br.error.log;
+
+
+    root /home/jflalarmesdev/htdocs;
+
+    index index.php index.html index.htm;
+
+
+    include common/php74.conf;
+    
+    include common/wpcommon-php74.conf;
+    include common/locations-wo.conf;
+    include /home/jflalarmesdev/conf/nginx/*.conf;
+
+}
