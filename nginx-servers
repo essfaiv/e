@@ -40,6 +40,9 @@ for site in "${sites[@]}"; do
         fi
       done
       content=`sed 's/^/+/' <<< $content`
+      if [ ! -z "$FILES" ]; then
+        FILES+="\n"
+      fi
       FILES+="$site\n$content"
     fi
   fi
