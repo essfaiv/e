@@ -1,62 +1,66 @@
 #!/bin/bash
 
-FILES=
+FILES=()
 
 export DEBIAN_FRONTEND=noninteractive
 
-sites=`ls /etc/nginx/sites-enabled`
-readarray -t sites <<< "$sites"
+IFSBAK=$IFS
+IFS=''
 
 all_includes=()
 
-IFSBAK=$IFS
-IFS=" "
-
-for site in "${sites[@]}"; do
-  content=`cat /etc/nginx/sites-enabled/$site`
-  if [ ! -z "$content" ]; then
-    site=`grep server_name <<< $content`
-    site=`sed 's/^\s//' <<< $site`
-    site=`echo $site | sed 's/server_name\s*//' | sed 's/;//' | cut -d ' ' -f 1`
-
-    if [ ! -z "$site" ] && [ '_' != ${site:0:1} ] && [ '#' != ${site:0:1} ]; then
-      includes=`grep include <<< $content`
-      readarray -t includes <<< "$includes"
-      for include in "${includes[@]}"; do
-        include=`echo $include | sed 's/^\s*include\s*//' | sed 's/^#.*//' | sed 's/;$//'`
-        if [ ! -z "$include" ]; then
-          if [ '/' != ${include:0:1} ]; then
-            include="/etc/nginx/$include"
-          fi
-          if [[ $include == *'*'* ]]; then
-            include_list=`ls $include`
-            readarray -t include_list <<< "$include_list"
-            for include_item in "${include_list[@]}"; do
-              all_includes+=($include_item)
-            done
-          else
-            all_includes+=($include)
-          fi
-        fi
-      done
-      content=`sed 's/^/+/' <<< $content`
-      if [ ! -z "$FILES" ]; then
-        FILES+="\n"
+for file in /etc/nginx/sites-enabled/*; do
+  readarray -t lines < $file
+  if [ 0 != ${#lines[@]} ]; then
+    content_no_comment=()
+    for line in "${lines[@]}"; do
+      is_commented=`echo $line | sed 's/^\s*//' | sed 's/^#.*//'`
+      if [ ! -z "$is_commented" ]; then
+        content_no_comment+=($line)
       fi
-      FILES+="$site\n$content"
+    done
+    site=`printf "%s\n" "${content_no_comment[@]}" | grep server_name | sed 's/^\s*//' | sed 's/server_name\s*//' | sed 's/;//' | cut -d ' ' -f 1`
+    if [ '_' != ${site:0:1} ]; then
+      content=`printf "%s\n" "${lines[@]}"`
+      includes=`echo $content | grep include`
+      content=`printf "+%s\n" "${lines[@]}"`
+      readarray -t includes <<< "$includes"
+      if [ 0 != ${#includes[@]} ]; then
+        for include in "${includes[@]}"; do
+          include=`echo $include | sed 's/^\s*include\s*//' | sed 's/^#.*//' | sed 's/;$//'`
+          if [ ! -z "$include" ]; then
+            if [ '/' != ${include:0:1} ]; then
+              include="/etc/nginx/$include"
+            fi
+            if [[ $include == *'*'* ]]; then
+              include_list=`ls $include`
+              readarray -t include_list <<< "$include_list"
+              for include_item in "${include_list[@]}"; do
+                all_includes+=($include_item)
+              done
+            else
+              all_includes+=($include)
+            fi
+          fi
+        done
+      fi
+      FILES+=($site)
+      FILES+=($content)
     fi
   fi
 done
 
-all_includes=($(printf "%s\n" "${all_includes[@]}" | sort -u))
-readarray -t all_includes <<< "$all_includes"
-for include in "${all_includes[@]}"; do
-  content=`cat $include`
-  content=`sed 's/^/+/' <<< $content`
-  include=`sed 's|/etc/nginx/||' <<< $include`
-  FILES+="\n$include\n$content"
-done
+if [ 0 != ${#all_includes[@]} ]; then
+  all_includes=($(printf "%s\n" "${all_includes[@]}" | sort -u))
+  readarray -t all_includes <<< "$all_includes"
+  for file in "${all_includes[@]}"; do
+    readarray -t lines < $file
+    content=`printf "+%s\n" "${lines[@]}"`
+    FILES+=($file)
+    FILES+=($content)
+  done
+fi
 
-echo -e $FILES
+printf "%s\n" "${FILES[@]}"
 
 IFS=$IFSBAK
