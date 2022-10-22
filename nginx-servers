@@ -56,6 +56,7 @@ if [ 0 != ${#all_includes[@]} ]; then
   for file in "${all_includes[@]}"; do
     readarray -t lines < $file
     content=`printf "+%s\n" "${lines[@]}"`
+    file=`echo $file | sed 's/^\/etc\/nginx\///'`
     FILES+=($file)
     FILES+=($content)
   done
